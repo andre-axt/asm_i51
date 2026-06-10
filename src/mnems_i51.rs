@@ -1,4 +1,15 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
+pub enum Operand {
+    Accumulator,
+    Register(u8),
+    Direct(u8),
+    Immediate(u8),
+    Bit(u8),
+    Indirect(u8),
+    Relative(i8),
+    CodeAddr(u16),
+}
+#[derive(Debug, Clone, PartialEq)]
 pub enum Mnems {
     Nop,
     Ajmp(u16),
@@ -7,6 +18,12 @@ pub enum Mnems {
     Inc(u8),
     Inc_Direct(u16),
     Jbc(u8, u8, u8),
+    Dec_A(u8),
+    Dec_Rn(u8),
+    Dec_Direct(u16),
+    Mul(u8),
+    Div(u8),
+    Da(u8),
 
 }
 
