@@ -10,6 +10,12 @@ pub enum Mnems {
 
 }
 
+pub struct Command {
+    opcode: String,
+    operand1: Option<String>,
+    operand2: Option<String>,
+}
+
 pub fn find_command(buffer: &mut String) -> Option<String> {
     let delims = ['\n', '#', ';'];
     let pos = buffer.find(delims)?;
