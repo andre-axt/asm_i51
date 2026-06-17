@@ -63,15 +63,14 @@ pub struct Command {
 
 pub fn find_command(buffer: &mut String) -> Option<String> {
     let delims = ['\n', '#', ';'];
-    let pos = buffer.find(delims)?;
+    let pos = buffer.find(|c: char| delims.contains(&c))?;
+    let prefix = buffer[..pos].trim().to_string();
     
-    let prefix = buffer[..pos].to_string();
-    
-    let delims = &buffer[pos..].chars().next().unwrap();
-    let delims_len = delims.len_utf8();
-    let remove_until = pos + delims_len;
-    
-    buffer.drain(..remove_until);
-    
+    if let Some(delim) = buffer[pos..].chars().next() {
+        let delim_len = delim.len_utf8();
+        let remove_until = pos + delim_len;
+        buffer.drain(..remove_until);
+    }
+
     Some(prefix)
 }
