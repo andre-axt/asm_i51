@@ -54,23 +54,37 @@ pub enum Mnems {
     Cjne(Operand, Operand, Operand),
     Djnz(Operand, Operand),
 }
-
+#[derive(Debug)]
 pub struct Command {
     opcode: String,
     operand1: Option<String>,
     operand2: Option<String>,
 }
 
-pub fn find_command(buffer: &mut String) -> Option<String> {
+pub fn find_command(buffer: &mut String) -> Option<Command> {
     let delims = ['\n', '#', ';'];
     let pos = buffer.find(|c: char| delims.contains(&c))?;
     let prefix = buffer[..pos].trim().to_string();
-    
+
     if let Some(delim) = buffer[pos..].chars().next() {
         let delim_len = delim.len_utf8();
         let remove_until = pos + delim_len;
         buffer.drain(..remove_until);
     }
 
-    Some(prefix)
+    if prefix.is_empty() {
+        return None;
+    }
+
+    let parts: Vec<&str> = prefix.split_whitespace().collect();
+    let opcode = parts.first()?.to_string();
+    
+    let operand1 = parts.get(1).map(|s| s.to_string());
+    let operand2 = parts.get(2).map(|s| s.to_string());
+
+    Some(Command {
+        opcode,
+        operand1,
+        operand2,
+    })
 }
